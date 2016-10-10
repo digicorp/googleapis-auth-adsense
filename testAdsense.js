@@ -1,40 +1,12 @@
-# googleapis-auth-adsense
-
-# Google Adsense management API call with Authentication
-This is for references to call call Adsense APIs using google OAuth authorization.
-Prerequisite:- you need to have Adsense enable account.
-
-#### Enable Management API using google console
-1. Login to Google Console (https://console.developers.google.com)
-2. click on Create Project
-3. click on Enable API
-4. Select Management API
-5. Click on Enable link
-6. Now, go to Credentials menu from left panel
-7. Click on Create Credentials and select OAuth Client ID
-8. If you have not configured Consent screen and configure it. click on Configure Consent, Give name and save.
-9. Tf redirected again to on Credendtials screen then again choose OAuth Client ID and create.
-10. Select Application Type as per your requirement, i hav eseleted as Web Application
-11. Give Name to it and click on Create, it will redirect to credentials detail
-12. Download JSON file from it and rename it to client_secret.json
-
-You can get help from google support documentation if you find any difficulty on executing above steps.
-https://developers.google.com/identity/sign-in/web/devconsole-project
-
-Now, lets move ahead with Authorizationa and Adsense API calling.
-
-```javascript
-// Require node  modules
 var fs = require('fs');
 var readline = require('readline');
 var google = require('googleapis');
 var googleAuth = require('google-auth-library');
 var adsense = google.adsense('v1.4');
-// We can use any google's api here [https://github.com/google/google-api-nodejs-client/tree/master/apis]
-
-// Delete your old credentials from  ~/.credentials/drive-nodejs-quickstart.json if modifying scope
-var SCOPES = ['https://www.googleapis.com/auth/adsense'];
-var TOKEN_DIR = '/.credentials/';// We can use, (process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE)
+// If modifying these scopes, delete your previously saved credentials
+// at ~/.credentials/drive-nodejs-quickstart.json
+var SCOPES = ['https://www.googleapis.com/auth/adsense'];// ['https://www.googleapis.com/auth/drive.metadata.readonly'];
+var TOKEN_DIR = '/.credentials/';//(process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE) + '/.credentials/';
 var TOKEN_PATH = TOKEN_DIR + 'drive-nodejs-quickstart.json';
 
 // Load client secrets from a local file.
@@ -43,12 +15,15 @@ fs.readFile('client_secret.json', function processClientSecrets(err, content) {
     console.log('Error loading client secret file: ' + err);
     return;
   }
-  // Authorize a client with the loaded credentials
+  // Authorize a client with the loaded credentials, then call the
+  // Drive API.
   authorize(JSON.parse(content), adsenseCallback);
 });
 
 /**
- * Create an OAuth2 client with the given credentials, and then execute the given callback function.
+ * Create an OAuth2 client with the given credentials, and then execute the
+ * given callback function.
+ *
  * @param {Object} credentials The authorization client credentials.
  * @param {function} callback The callback to call with the authorized client.
  */
@@ -122,23 +97,23 @@ function storeToken(token) {
 }
 
 /**
- * Call Adsense generate api
+ * Lists the names and IDs of up to 10 files.
  *
  * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
  */
 function adsenseCallback(auth) {
   console.log("inside adsenseCallback");
   var parameter = {
-        accountId: 'Your Adsense ID start pub-',
+        accountId: 'pub-3272610163327729',
         // currency : ,
         dimension : ["DATE","AD_FORMAT_CODE","AD_FORMAT_NAME"],
+        endDate: '2016-09-30',
         // filter : ,
         // locale : ,
         // maxResults : ,
         metric  :["EARNINGS","AD_REQUESTS","AD_REQUESTS_RPM","CLICKS","COST_PER_CLICK","INDIVIDUAL_AD_IMPRESSIONS_RPM"] ,
         // sort : ,
         startDate: '2016-09-01',
-        endDate: '2016-09-30',
         // startIndex : ,
         // useTimezoneReporting : ,
         auth: auth
@@ -146,17 +121,39 @@ function adsenseCallback(auth) {
     adsense.reports.generate(parameter, function(err, response) {
      console.log("ERR :::: " + err);
      console.log("Response :::: " + JSON.stringify(response));
+    //  if(!err){
+    //   return res.send({
+    //    status:true,
+    //    data:response
+    //   });
+    //  }else{
+    //   return res.send({
+    //    status:false,
+    //    data:constant.requestMessages.ERR_GENERATE_REPORTS_DATA_FROM_GOOGLE_ADSENSE_SERVER
+    //   });
+    //  }
     });
-```
-
-* Save above code with testAdsense.js inside testgoogleapis directory
-* Paste the client_secret.json to testgoogleapis directory
-* create .credentials folder in testgoogleapis directory
-* Install required node_modules using npm install and run it
-```sh
-cd testgoogleapis
-npm install googleapis
-node testAdsense
-```
-* When you run above code, it will ask for authorization in command line, go to link and authorize it using your login
-* After approval, it will redirect to url which you have configured in client_secret.json, it will append access taken to rediret url in redirecturl?code=AASXXCXC21454 parameter. copy the code and paste it in command line and press Enter, if it validated, adsense api will be called and return json of respoense.
+/*
+  var service = google.drive('v3');
+  service.files.list({
+    auth: auth,
+    pageSize: 10,
+    fields: "nextPageToken, files(id, name)"
+  }, function(err, response) {
+    if (err) {
+      console.log('The API returned an error: ' + err);
+      return;
+    }
+    var files = response.files;
+    if (files.length == 0) {
+      console.log('No files found.');
+    } else {
+      console.log('Files:');
+      for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+        console.log('%s (%s)', file.name, file.id);
+      }
+    }
+  });
+  */
+}
