@@ -1,6 +1,6 @@
 # googleapis-auth-adsense
 
-# Google Adsense management API call with Authentication
+### Google Adsense management API call with Authentication
 This is for references to call call Adsense APIs using google OAuth authorization.
 Prerequisite:- you need to have Adsense enable account.
 
