@@ -1,14 +1,15 @@
 # googleapis-auth-adsense
 
 ### Google Adsense management API call with Authentication
-This is for references to call call Adsense APIs using google OAuth authorization.
-Prerequisite:- you need to have Adsense enable account.
+This is references for how to call Google API's using google OAuth authorization.
 
-#### Enable Management API using google console
+The below example is to generate report from google Adsense, Prerequisite for Adsense:- you need to have Adsense enable account.
+
+#### Enable API using google console and Generate OAuth secret keys
 1. Login to Google Console (https://console.developers.google.com)
 2. click on Create Project
 3. click on Enable API
-4. Select Management API
+4. Select Management API / Any API you want to enable
 5. Click on Enable link
 6. Now, go to Credentials menu from left panel
 7. Click on Create Credentials and select OAuth Client ID
@@ -29,8 +30,7 @@ var fs = require('fs');
 var readline = require('readline');
 var google = require('googleapis');
 var googleAuth = require('google-auth-library');
-var adsense = google.adsense('v1.4');
-// We can use any google's api here [https://github.com/google/google-api-nodejs-client/tree/master/apis]
+var adsense = google.adsense('v1.4'); // We can use any google's api here [https://github.com/google/google-api-nodejs-client/tree/master/apis]
 
 // Delete your old credentials from  ~/.credentials/drive-nodejs-quickstart.json if modifying scope
 var SCOPES = ['https://www.googleapis.com/auth/adsense'];
@@ -129,7 +129,7 @@ function storeToken(token) {
 function adsenseCallback(auth) {
   console.log("inside adsenseCallback");
   var parameter = {
-        accountId: 'Your Adsense ID start pub-',
+        accountId: 'Your Adsense ID, pub----',
         // currency : ,
         dimension : ["DATE","AD_FORMAT_CODE","AD_FORMAT_NAME"],
         // filter : ,
